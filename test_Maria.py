@@ -10,6 +10,8 @@ import numpy as np
 model = load_model('/home/issam/ML/Maria_project/Maria_model.h5')
 # read the input image using Pillow (you can use another library, e.g., OpenCV)
 emgs=os.listdir("/home/issam/ML/Maria_project/dataset/testing/bathtub")
+img1= Image.open("/home/issam/ML/Maria_project/dataset/testing/bathtub/bathtub_0118.png")
+
 for img in emgs:
     img1= Image.open("/home/issam/ML/Maria_project/dataset/testing/bathtub/" + img)
 # convert to ndarray numpy
