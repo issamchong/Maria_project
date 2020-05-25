@@ -3,13 +3,23 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Conv2D, MaxPool2D, Flatten, Activation
 from tensorflow.keras import backend as K
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+import tensorflow as tf
 
 img_width, img_height = 357,90 #define image size here width & height 
 input_depth = 1 #1: gray image
-train_data_dir = '/home/issam/ML/Maria_pproject/dataset/training' #data training path
-testing_data_dir = '/home/issam/ML/Maria_pproject/dataset/testing' #data testing path
-epochs = 10 #number of training epoch
-batch_size =5 #training batch size
+train_data_dir = '/home/issam/ML/Maria_project/dataset/training' #data training path
+testing_data_dir = '/home/issam/ML/Maria_project/dataset/testing' #data testing path
+epochs = 3 #number of training epoch
+batch_size = 7 #training batch size
+#train_datagen = ImageDataGenerator(
+       #rescale=1/255,
+       #rotation_range=0.5,
+        #width_shift_range=0.05,
+        #height_shift_range=0.05,
+        #shear_range=0.05,
+        #zoom_range=0.05,
+        #horizontal_flip=True,
+        #fill_mode='nearest')
 train_datagen = ImageDataGenerator(rescale=1/255)
 test_datagen = ImageDataGenerator(rescale=1/255)
 
@@ -29,10 +39,12 @@ testing_generator = test_datagen.flow_from_directory(
 
 
 # define number of filters and nodes in the fully connected layer
-NUMB_FILTER_L1 = 30
-NUMB_FILTER_L2 = 30
-NUMB_FILTER_L3 = 30
-NUMB_NODE_FC_LAYER = 25
+NUMB_FILTER_L1 = 32
+NUMB_FILTER_L2 = 64
+NUMB_FILTER_L3 = 80
+NUMB_FILTER_L4 = 100
+
+NUMB_NODE_FC_LAYER = 70
 
 #define input image order shape
 if K.image_data_format() == 'channels_first':
@@ -43,30 +55,21 @@ else:
 #define the network
 model = Sequential()
 # Layer 1
-model.add(Conv2D(NUMB_FILTER_L1, (5, 5), 
+model.add(Conv2D(NUMB_FILTER_L1, kernel_size=(3, 3), 
+                 activation='relu',
                  input_shape=input_shape_val, 
                  padding='same', name='input_tensor'))
-model.add(Activation('relu'))
-model.add(MaxPool2D((2, 2)))
+
 
 # Layer 2
-model.add(Conv2D(NUMB_FILTER_L2, (5, 5), padding='same'))
-model.add(Activation('relu'))
-model.add(MaxPool2D((2, 2)))
-
-# Layer 3
-model.add(Conv2D(NUMB_FILTER_L3, (5, 5), padding='same'))
-model.add(Activation('relu'))
-
-# flattening the model for fully connected layer
+model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(MaxPool2D(pool_size=(2, 2)))
+model.add(tf.keras.layers.Dropout(0.25))
 model.add(Flatten())
+model.add(Dense(128, activation='relu'))
+model.add(tf.keras.layers.Dropout(0.5))
+model.add(Dense(6, activation='softmax'))
 
-# fully connected layer
-model.add(Dense(NUMB_NODE_FC_LAYER, activation='relu'))
-
-# output layer
-model.add(Dense(train_generator.num_classes, 
-                activation='softmax', name='output_tensor'))
 
 # Compilile the network
 model.compile(loss='categorical_crossentropy',

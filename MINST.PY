@@ -5,6 +5,7 @@ from tensorflow.keras.layers import Dense, Conv2D, MaxPool2D, Flatten, Activatio
 from tensorflow.keras import backend as K
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import tensorflow as tf
+import os 
 
 
 
@@ -15,6 +16,20 @@ epochs = 12
 
 # input image dimensions
 img_rows, img_cols = 28, 28
+
+beds_train = os.listdir('/home/issam/ML/Maria_project/dataset/training/bed') 
+beds_test = os.listdir('/home/issam/ML/Maria_project/dataset/testing/bed') 
+
+desks_train = os.listdir('/home/issam/ML/Maria_project/dataset/training/desk') 
+desks_test = os.listdir('/home/issam/ML/Maria_project/dataset/testing/desk') 
+
+bed_train=np.empty([357,90],dtype='uint8',order='C')
+
+for f in beds_train:
+    img=np.asarray(f)
+    np.append(bed_train,img)
+print(bed_train)
+
 
 # the data, split between train and test sets
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -53,7 +68,7 @@ model.add(tf.keras.layers.Dropout(0.5))
 model.add(Dense(num_classes, activation='softmax'))
 
 model.compile(loss=tf.keras.losses.categorical_crossentropy,
-              optimizer=keras.optimizers.Adadelta(),
+              optimizer=tf.keras.optimizers.Adadelta(),
               metrics=['accuracy'])
 
 model.fit(x_train, y_train,
