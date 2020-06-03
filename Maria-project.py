@@ -10,7 +10,7 @@ input_depth = 1 #1: gray image
 train_data_dir = '/home/issam/ML/Maria_project/dataset/training' #data training path
 testing_data_dir = '/home/issam/ML/Maria_project/dataset/testing' #data testing path
 epochs = 3 #number of training epoch
-batch_size = 7 #training batch size
+batch_size = 6 #training batch size
 #train_datagen = ImageDataGenerator(
        #rescale=1/255,
        #rotation_range=0.5,
@@ -68,7 +68,7 @@ model.add(tf.keras.layers.Dropout(0.25))
 model.add(Flatten())
 model.add(Dense(128, activation='relu'))
 model.add(tf.keras.layers.Dropout(0.5))
-model.add(Dense(6, activation='softmax'))
+model.add(Dense(9, activation='softmax'))
 
 
 # Compilile the network
