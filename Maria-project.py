@@ -70,7 +70,6 @@ model.add(Dense(128, activation='relu'))
 model.add(tf.keras.layers.Dropout(0.5))
 model.add(Dense(9, activation='softmax'))
 
-
 # Compilile the network
 model.compile(loss='categorical_crossentropy',
               optimizer='sgd', metrics=['accuracy'])
@@ -86,6 +85,9 @@ model.fit_generator(
     validation_data=testing_generator,#our validation generator
     #number of iteration per epoch = number of data / batch size
     validation_steps=np.floor(testing_generator.n / batch_size))
+score = model.evaluate(testing_generator, verbose=0)
+print('Test loss:', score[0])
+print('Test accuracy:', score[1])
 print("Training is done!")
 model.save('/home/issam/ML/Maria_model.h5')
 print("Model is successfully stored!")
